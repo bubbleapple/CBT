@@ -1,8 +1,8 @@
 "use strict";
 // Point class
-function Point()
+function Point(vector = [])
 {
-    this.vector = [];
+    this.vector = vector;
     this.neighbors = [];
     Point.prototype.toString = function ()
     {
@@ -14,8 +14,42 @@ function Point()
         return res;
     }
 
-
  }
+
+// FUNCTION: copyGraph(G1)
+//      return a copy of the entire graph G1. Each point will be newly
+//      created.
+// PARAMETERS:
+//      G1    -   Graph to be copied
+// RETURN:
+//      a new Graph.
+// NOTICE:
+//      The element of the vector member of each point is assumed to be
+//      primitive type, so that they are pushed into the new point's vector
+//      array directly.
+
+function copyGraph(G1)
+{
+    let m = new Map();
+    let v;
+    let G2 = new Set();
+    for (let u of G1)
+    {
+        v = new Point();
+        for (let x of u.vector)
+            v.vector.push(x);
+        m.set(u, v);
+    }
+    for (let u of G1)
+    {
+        v = m.get(u);
+        for (let x of u.neighbors)
+            v.neighbors.push(m.get(x));
+        G2.add(v);
+    }
+    return G2;
+}
+
 
 // FUNCTION: arrayEqual(a, b)
 //      compare the elements of two arrays one by one to determine if they
@@ -122,67 +156,13 @@ function radius(T, s, fullmesh = true, metricType = "euclidean")
 // PARAMETERS:
 //      vertices    -   a Set object containing all the points
 //      startVertex -   the root of the MST
+//      fullmesh    -   whether the topo is treated as full mesh or not
+//      metricType  -   parameter for metric()
 // RETURN:
 //      MST represented by a set of Points
 function PrimsMST(vertices, startVertex, fullmesh = true, metricType = "euclidean")
 {
-    var S = new Set([startVertex]); // the graph to be returned
-    var T = new Set(vertices);      // a copy of parameter vertices
-    for(let vertex of T)            // delete start vertex from the vertices set
-    {
-        if (arrayEqual(vertex.vector, startVertex.vector))
-        {
-            T.delete(vertex);
-            break;
-        }
-    }
-    
-    // clear the Tree neighbor information:
-    for(let item of S)
-        item.Tneighbors = [];
-    for(let item of T)
-        item.Tneighbors = [];
-
-
-    while (T.size > 0)
-    {
-        let min = {distance : Infinity, start : null, end : null};
-        for (let u of S)    // S has all the points in the MST
-        {
-            let neighbors;
-            if (fullmesh)
-                neighbors = T;
-            else
-                neighbors = u.neighbors.filter( v => T.has(v));
-            for (let v of neighbors)// V has all the points to be added
-            {
-                let distance = metric(u, v, metricType);
-                if (distance < min.distance)
-                {
-                    min.distance = distance;
-                    min.start = u;
-                    min.end = v;
-                }
-            }
-        }
-
-        // update the tree neighbor list
-        min.end.Tneighbors.push(min.start);
-        min.start.Tneighbors.push(min.end);
-        // add the new vertex into G and remove it from V
-        S.add(min.end);
-        T.delete(min.end);
-    }
-    // clear the auxiliary Tneighbors array
-    for(let v of S)
-    {
-        v.neighbors =v.Tneighbors;
-        delete v.Tneighbors;
-
-    }
-
-
-    return S;
+    return getTree(vertices, startVertex, 0, fullmesh, metricType);
 }
 
 
@@ -190,13 +170,33 @@ function PrimsMST(vertices, startVertex, fullmesh = true, metricType = "euclidea
 //      find out the SPT using Dijkstra's algorithm
 // PARAMETERS:
 //      vertices    -   a Set object containing all the points
-//      startVertex -   the root of the MST
+//      startVertex -   the root of the SPT
+//      fullmesh    -   whether the topo is treated as full mesh or not
+//      metricType  -   parameter for metric()
 // RETURN:
 //      SPT represented by a set of Points
 function SPT(vertices, startVertex, fullmesh = true, metricType = "euclidean")
 {
+    return getTree(vertices, startVertex, 1, fullmesh, metricType);
+}
+
+
+
+
+// FUNCTION getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclidean")
+//      find out the SPT using Dijkstra's algorithm
+// PARAMETERS:
+//      vertices    -   a Set object containing all the points
+//      startVertex -   the root of the tree generated
+//      e           -   epsilone, used to tune the weight of the path
+//      fullmesh    -   whether the topo is treated as full mesh or not
+//      metricType  -   parameter for metric()
+// RETURN:
+//      SPT represented by a set of Points
+function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclidean")
+{
     var S = new Set();              // the graph to be returned
-    var T = new Set(vertices);      // a copy of parameter vertices
+    var T = copyGraph(vertices);      // a copy of parameter vertices
     
     // mark the starting vertex
     for(let p of T)
@@ -237,7 +237,7 @@ function SPT(vertices, startVertex, fullmesh = true, metricType = "euclidean")
         let distance = Infinity;
         for(let v of neighbors)
         {
-            distance = minVertex.path.length + metric(minVertex, v, metricType);
+            distance =  e * minVertex.path.length + metric(minVertex, v, metricType);
             if (v.path.length > distance)
             {
                 // update v's path:
@@ -261,6 +261,12 @@ function SPT(vertices, startVertex, fullmesh = true, metricType = "euclidean")
     return S;
 }
 
+
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // below are merely testing codes:
 
@@ -274,56 +280,62 @@ function printGraph(V)
 
 
 
-let V = new Set();
-let a = new Point();
-let b = new Point();
-let c = new Point();
-let d = new Point();
-let e = new Point();
 
-a.vector = [1, 1];
-b.vector = [2, 2];
-c.vector = [3, 3];
-d.vector = [2, 3];
-e.vector = [3, 2];
-V.add(a);
-V.add(b);
-// V.add(c);
-V.add(d);
-V.add(e);
+function test()
+{
 
+    let V = new Set();
+    let a = new Point([1, 1]);
+    let b = new Point([2, 2]);
+    let c = new Point([3, 3]);
+    let d = new Point([2, 3]);
+    let e = new Point([3, 2]);
+
+    V.add(a);
+    V.add(b);
+    // V.add(c);
+    V.add(d);
+    V.add(e);
 
 
-// kaka = SPT(V, b);
-console.log("Prim's MST, full mesh:\n");
-printGraph(PrimsMST(V, a));
+    a.neighbors = [d, e];
+    b.neighbors = [e, d];
+    // c.neighbors = [b, e, d];
+    d.neighbors = [a, b];
+    e.neighbors = [a, b];
 
-console.log("\n\n");
-console.log("SPT, full mesh:");
-printGraph(SPT(V, a));
-
-
-
-a.neighbors = [d, e];
-b.neighbors = [e, d];
-// c.neighbors = [b, e, d];
-d.neighbors = [a, b];
-e.neighbors = [a, b];
-            
-
-// test for radius:
-console.log("\n\nGraph V is :");
-printGraph(V);
-console.log("radius of the original graph is %d", radius(SPT(V, a, true, 'manhattan'), a, true, "manhattan"));
+    // kaka = SPT(V, b);
+    //
+    console.log("\n\nGraph V is :");
+    printGraph(V);
+    console.log("\nPrim's MST, full mesh:");
+    printGraph(PrimsMST(V, a));
 
 
+    console.log("\n\nGraph V is :");
+    printGraph(V);
+    console.log("\nSPT, full mesh:");
+    printGraph(SPT(V, a));
 
-console.log("\n\n");
-console.log("Prim's MST, NOT fullmesh:");
-printGraph(PrimsMST(V, a, false, "manhattan"));
 
-console.log("\n\n");
+    // test for radius:
+    console.log("\n\nGraph V is :");
+    printGraph(V);
+    console.log("radius of the original graph is %d", radius(SPT(V, a, true, 'manhattan'), a, true, "manhattan"));
 
-console.log("SPT, NOT fullmesh:");
-printGraph(SPT(V, a, false , "manhattan"));
 
+    console.log("\n\nGraph V is :");
+    printGraph(V);
+    console.log("\nPrim's MST, NOT fullmesh:");
+    printGraph(PrimsMST(V, a, false, "manhattan"));
+
+    console.log("\n\nGraph V is :");
+    printGraph(V);
+    console.log("\nSPT, NOT fullmesh:");
+    printGraph(SPT(V, a, false , "manhattan"));
+
+
+}
+
+
+test();
