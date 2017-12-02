@@ -1,13 +1,13 @@
+"use strict";
 // Point class
 function Point()
 {
     this.vector = [];
-    this.Gneighbors = [];
-    this.Tneighbors = [];
+    this.neighbors = [];
     Point.prototype.toString = function ()
     {
         let res = "(" + this.vector + ") ---  ";
-        for(let x of this.Tneighbors)
+        for(let x of this.neighbors)
         {
             res += '(' + x.vector + ') ';
         }
@@ -42,16 +42,19 @@ function arrayEqual(a, b)
 }
 
 
-// FUNCTION: metric(u, v)
+// FUNCTION: metric(u, v, type)
 //      calculate the distance between two Points
 // PARAMETERS:
 //      u, v    -   Two object of Point class
+//      type    -   specify which type of distance it is going to calculate:
+//                  "euclidean" -   euclidean distance (default)
+//                  "manhattan" -   manhattan distance
 // RETURN:
 //      distance between u and v
 //
 function metric(u, v, type = "euclidean")
 {
-    distance = 0;
+    let distance = 0;
     // Euclidean Distance:
     if(type === "euclidean")
     {
@@ -68,6 +71,46 @@ function metric(u, v, type = "euclidean")
         console.log("ERROR: Unsupport metric type!!");
     return distance;
 }
+
+
+// FUNCTION: radius(G, s, metricType = "euclidean", fullmesh = true) 
+//      calculate the radius of a graph G
+// PARAMETERS:
+//      G           -   Graph to be calculated
+//      metricType  -   specify which type of distance it is going to calculate:
+//                         "euclidean" -   euclidean distance (default)
+//                         "manhattan" -   manhattan distance
+//      fullmesh    -   whether the graph is treated as a full mesh topo
+// RETURN:
+//      radius of the graph
+//
+function radius(G, s, metricType = "euclidean", fullmesh = true)
+{
+    var radius = 0;
+    if(fullmesh)
+    {
+        for (let v of G)
+            radius += metric(s, v); // assuming metric(s, s) == 0
+    }
+    else
+    {
+        function DFS(p, pathLength)
+        {
+            if(p.visited === undefined)
+            {
+//                 console.log("Visiting %s ||| path is %d", p, pathLength);
+                p.visited = true;
+                radius = Math.max(radius, pathLength);
+                for (let c of p.neighbors)
+                    DFS(c, pathLength + metric(p, c, metricType));
+                delete p.visited;
+            }
+        }
+        DFS(s, 0);
+    }
+    return radius;
+}
+
 
 
 // FUNCTION: PrimsMST(vertices, startVertex)
@@ -106,7 +149,7 @@ function PrimsMST(vertices, startVertex, fullmesh = true)
             if (fullmesh)
                 neighbors = T;
             else
-                neighbors = u.Gneighbors.filter( v => T.has(v));
+                neighbors = u.neighbors.filter( v => T.has(v));
             for (let v of neighbors)// V has all the points to be added
             {
                 let distance = metric(u, v);
@@ -126,6 +169,15 @@ function PrimsMST(vertices, startVertex, fullmesh = true)
         S.add(min.end);
         T.delete(min.end);
     }
+    // clear the auxiliary Tneighbors array
+    for(let v of S)
+    {
+        v.neighbors =v.Tneighbors;
+        delete v.Tneighbors;
+
+    }
+
+
     return S;
 }
 
@@ -175,7 +227,7 @@ function SPT(vertices, startVertex, fullmesh = true)
         if (fullmesh)
             neighbors = T;
         else
-            neighbors = minVertex.Gneighbors.filter( v => T.has(v));
+            neighbors = minVertex.neighbors.filter( v => T.has(v));
         
         // update neighbor's distance
         let distance = Infinity;
@@ -195,6 +247,12 @@ function SPT(vertices, startVertex, fullmesh = true)
         S.add(minVertex);
 //         console.log("added %s into the solution set.\n", minVertex.vector);
     }
+    // clear the auxiliary Tneighbors array
+    for(let v of S)
+    {
+        v.neighbors =v.Tneighbors;
+        delete v.Tneighbors;
+    }
 
     return S;
 }
@@ -212,12 +270,12 @@ function printGraph(V)
 
 
 
-V = new Set();
-a = new Point();
-b = new Point();
-c = new Point();
-d = new Point();
-e = new Point();
+let V = new Set();
+let a = new Point();
+let b = new Point();
+let c = new Point();
+let d = new Point();
+let e = new Point();
 
 a.vector = [1, 1];
 b.vector = [2, 2];
@@ -230,6 +288,8 @@ V.add(b);
 V.add(d);
 V.add(e);
 
+
+
 // kaka = SPT(V, b);
 console.log("Prim's MST, full mesh:\n");
 printGraph(PrimsMST(V, a));
@@ -240,12 +300,19 @@ printGraph(SPT(V, a));
 
 
 
-a.Gneighbors = [d, e];
-b.Gneighbors = [e, d];
-// c.Gneighbors = [b, e, d];
-d.Gneighbors = [a, b];
-e.Gneighbors = [a, b];
+a.neighbors = [d, e];
+b.neighbors = [e, d];
+// c.neighbors = [b, e, d];
+d.neighbors = [a, b];
+e.neighbors = [a, b];
             
+
+// test for radius:
+console.log("\n\nGraph V is :");
+printGraph(V);
+console.log("radius of the original graph is %d", radius(V, a, "manhattan", false));
+
+
 
 console.log("\n\n");
 console.log("Prim's MST, NOT fullmesh:");
@@ -255,3 +322,4 @@ console.log("\n\n");
 
 console.log("SPT, NOT fullmesh:");
 printGraph(SPT(V, a, false));
+
