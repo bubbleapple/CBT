@@ -73,23 +73,27 @@ function metric(u, v, type = "euclidean")
 }
 
 
-// FUNCTION: radius(G, s, metricType = "euclidean", fullmesh = true) 
-//      calculate the radius of a graph G
+// FUNCTION: radius(T, s, metricType = "euclidean", fullmesh = true) 
+//      calculate the radius of an SPT T
 // PARAMETERS:
-//      G           -   Graph to be calculated
+//      T           -   SPT to be calculated
 //      metricType  -   specify which type of distance it is going to calculate:
 //                         "euclidean" -   euclidean distance (default)
 //                         "manhattan" -   manhattan distance
 //      fullmesh    -   whether the graph is treated as a full mesh topo
 // RETURN:
-//      radius of the graph
+//      radius of the T. See NOTICE for details.
+// NOTICE:
+//      If the parameter T is NOT a SPT but a normal graph, and the fullmesh
+//      is set to false, the result returned is the longest acyclic path of
+//      the graph, not actually the radius.
 //
-function radius(G, s, metricType = "euclidean", fullmesh = true)
+function radius(T, s, fullmesh = true, metricType = "euclidean")
 {
     var radius = 0;
     if(fullmesh)
     {
-        for (let v of G)
+        for (let v of T)
             radius = Math.max(radius, metric(s, v, metricType)); // assuming metric(s, s) == 0
     }
     else
@@ -120,7 +124,7 @@ function radius(G, s, metricType = "euclidean", fullmesh = true)
 //      startVertex -   the root of the MST
 // RETURN:
 //      MST represented by a set of Points
-function PrimsMST(vertices, startVertex, metricType = "euclidean", fullmesh = true)
+function PrimsMST(vertices, startVertex, fullmesh = true, metricType = "euclidean")
 {
     var S = new Set([startVertex]); // the graph to be returned
     var T = new Set(vertices);      // a copy of parameter vertices
@@ -189,7 +193,7 @@ function PrimsMST(vertices, startVertex, metricType = "euclidean", fullmesh = tr
 //      startVertex -   the root of the MST
 // RETURN:
 //      SPT represented by a set of Points
-function SPT(vertices, startVertex, metricType = "euclidean", fullmesh = true)
+function SPT(vertices, startVertex, fullmesh = true, metricType = "euclidean")
 {
     var S = new Set();              // the graph to be returned
     var T = new Set(vertices);      // a copy of parameter vertices
@@ -310,16 +314,16 @@ e.neighbors = [a, b];
 // test for radius:
 console.log("\n\nGraph V is :");
 printGraph(V);
-console.log("radius of the original graph is %d", radius(SPT(V, a, 'manhattan'), a, "manhattan", false));
+console.log("radius of the original graph is %d", radius(SPT(V, a, true, 'manhattan'), a, true, "manhattan"));
 
 
 
 console.log("\n\n");
 console.log("Prim's MST, NOT fullmesh:");
-printGraph(PrimsMST(V, a, "manhattan", false));
+printGraph(PrimsMST(V, a, false, "manhattan"));
 
 console.log("\n\n");
 
 console.log("SPT, NOT fullmesh:");
-printGraph(SPT(V, a, "manhattan", false));
+printGraph(SPT(V, a, false , "manhattan"));
 
