@@ -49,15 +49,24 @@ function arrayEqual(a, b)
 // RETURN:
 //      distance between u and v
 //
-function metric(u, v)
+function metric(u, v, type = "euclidean")
 {
     distance = 0;
     // Euclidean Distance:
-    for(let i = 0; i < u.vector.length; i++)
+    if(type === "euclidean")
     {
-        distance += Math.pow((u.vector[i] - v.vector[i]), 2);
+        for(let i = 0; i < u.vector.length; i++)
+            distance += Math.pow((u.vector[i] - v.vector[i]), 2);
+        distance = Math.sqrt(distance);
     }
-    return Math.sqrt(distance);
+    else if (type === "manhattan")
+    {
+        for(let i = 0; i < u.vector.length; i++)
+            distance += Math.abs(u.vector[i] - v.vector[i]);
+    }
+    else
+        console.log("ERROR: Unsupport metric type!!");
+    return distance;
 }
 
 
