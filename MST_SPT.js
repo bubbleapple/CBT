@@ -4,8 +4,18 @@ function Point()
     this.vector = [];
     this.Gneighbors = [];
     this.Tneighbors = [];
- }
+    Point.prototype.toString = function ()
+    {
+        let res = "(" + this.vector + ") ---  ";
+        for(let x of this.Tneighbors)
+        {
+            res += '(' + x.vector + ') ';
+        }
+        return res;
+    }
 
+
+ }
 
 // FUNCTION: arrayEqual(a, b)
 //      compare the elements of two arrays one by one to determine if they
@@ -62,8 +72,16 @@ function PrimsMST(vertices, startVertex, fullmesh = true)
 {
     var S = new Set([startVertex]); // the graph to be returned
     var T = new Set(vertices);      // a copy of parameter vertices
-    T.delete(startVertex);          // TODO: not working - remove root from the vertices set.
-
+    for(let vertex of T)            // delete start vertex from the vertices set
+    {
+        if (arrayEqual(vertex.vector, startVertex.vector))
+        {
+            T.delete(vertex);
+            break;
+        }
+    }
+    
+    // clear the Tree neighbor information:
     for(let item of S)
         item.Tneighbors = [];
     for(let item of T)
@@ -92,7 +110,7 @@ function PrimsMST(vertices, startVertex, fullmesh = true)
             }
         }
 
-        // update the neighbor set
+        // update the tree neighbor list
         min.end.Tneighbors.push(min.start);
         min.start.Tneighbors.push(min.end);
         // add the new vertex into G and remove it from V
@@ -175,25 +193,13 @@ function SPT(vertices, startVertex, fullmesh = true)
 ///////////////////////////////////////////////////////////////////////////////
 // below are merely testing codes:
 
-function neighbors(u)
-{
-    var res = "";
-    for(let x of u.Tneighbors)
-    {
-        res += x.vector + ' ';
-    }
-    return res;
-}
-
-        
 function printGraph(V)
 {
     for(let v of V)
     {
-        console.log("Point: %s neighbors: %s", v.vector, neighbors(v));
+        console.log("%s", v);
     }
 }
-
 
 
 
@@ -219,8 +225,8 @@ V.add(e);
 console.log("Prim's MST, full mesh:\n");
 printGraph(PrimsMST(V, a));
 
-console.log("\n\n\n");
-console.log("SPT, full mesh:\n");
+console.log("\n\n");
+console.log("SPT, full mesh:");
 printGraph(SPT(V, a));
 
 
@@ -232,10 +238,11 @@ d.Gneighbors = [a, b];
 e.Gneighbors = [a, b];
             
 
-console.log("Prim's MST, NOT fullmesh:\n");
+console.log("\n\n");
+console.log("Prim's MST, NOT fullmesh:");
 printGraph(PrimsMST(V, a, false));
 
-console.log("\n\n\n");
+console.log("\n\n");
 
-console.log("SPT, NOT fullmesh:\n");
+console.log("SPT, NOT fullmesh:");
 printGraph(SPT(V, a, false));
