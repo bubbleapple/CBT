@@ -90,7 +90,7 @@ function radius(G, s, metricType = "euclidean", fullmesh = true)
     if(fullmesh)
     {
         for (let v of G)
-            radius += metric(s, v); // assuming metric(s, s) == 0
+            radius = Math.max(radius, metric(s, v, metricType)); // assuming metric(s, s) == 0
     }
     else
     {
@@ -120,7 +120,7 @@ function radius(G, s, metricType = "euclidean", fullmesh = true)
 //      startVertex -   the root of the MST
 // RETURN:
 //      MST represented by a set of Points
-function PrimsMST(vertices, startVertex, fullmesh = true)
+function PrimsMST(vertices, startVertex, metricType = "euclidean", fullmesh = true)
 {
     var S = new Set([startVertex]); // the graph to be returned
     var T = new Set(vertices);      // a copy of parameter vertices
@@ -152,7 +152,7 @@ function PrimsMST(vertices, startVertex, fullmesh = true)
                 neighbors = u.neighbors.filter( v => T.has(v));
             for (let v of neighbors)// V has all the points to be added
             {
-                let distance = metric(u, v);
+                let distance = metric(u, v, metricType);
                 if (distance < min.distance)
                 {
                     min.distance = distance;
@@ -189,7 +189,7 @@ function PrimsMST(vertices, startVertex, fullmesh = true)
 //      startVertex -   the root of the MST
 // RETURN:
 //      SPT represented by a set of Points
-function SPT(vertices, startVertex, fullmesh = true)
+function SPT(vertices, startVertex, metricType = "euclidean", fullmesh = true)
 {
     var S = new Set();              // the graph to be returned
     var T = new Set(vertices);      // a copy of parameter vertices
@@ -233,7 +233,7 @@ function SPT(vertices, startVertex, fullmesh = true)
         let distance = Infinity;
         for(let v of neighbors)
         {
-            distance = minVertex.path.length + metric(minVertex, v);
+            distance = minVertex.path.length + metric(minVertex, v, metricType);
             if (v.path.length > distance)
             {
                 // update v's path:
@@ -310,16 +310,16 @@ e.neighbors = [a, b];
 // test for radius:
 console.log("\n\nGraph V is :");
 printGraph(V);
-console.log("radius of the original graph is %d", radius(V, a, "manhattan", false));
+console.log("radius of the original graph is %d", radius(SPT(V, a, 'manhattan'), a, "manhattan", false));
 
 
 
 console.log("\n\n");
 console.log("Prim's MST, NOT fullmesh:");
-printGraph(PrimsMST(V, a, false));
+printGraph(PrimsMST(V, a, "manhattan", false));
 
 console.log("\n\n");
 
 console.log("SPT, NOT fullmesh:");
-printGraph(SPT(V, a, false));
+printGraph(SPT(V, a, "manhattan", false));
 
