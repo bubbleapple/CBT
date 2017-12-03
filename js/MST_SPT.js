@@ -1,10 +1,10 @@
 "use strict";
 // Point class
-function Point(vector = [])
+function MyPoint(vector = [])
 {
     this.vector = vector;
     this.neighbors = [];
-    Point.prototype.toString = function ()
+    MyPoint.prototype.toString = function ()
     {
         let res = "(" + this.vector + ") ---  ";
         for(let x of this.neighbors)
@@ -34,7 +34,7 @@ function copyGraph(G1)
     let G2 = new Set();
     for (let u of G1)
     {
-        v = new Point();
+        v = new MyPoint();
         for (let x of u.vector)
             v.vector.push(x);
         m.set(u, v);
@@ -54,7 +54,7 @@ function copyGraph(G1)
 //      compare the elements of two arrays one by one to determine if they
 //      are the same.
 // PARAMETERS:
-//      u, v    -   Two object of Point class
+//      u, v    -   Two object of MyPoint class
 // RETURN:
 //      true if two arrays have same size and elements are the same at every
 //      index. Otherwise, return false.
@@ -78,7 +78,7 @@ function arrayEqual(a, b)
 // FUNCTION: metric(u, v, type)
 //      calculate the distance between two Points
 // PARAMETERS:
-//      u, v    -   Two object of Point class
+//      u, v    -   Two object of MyPoint class
 //      type    -   specify which type of distance it is going to calculate:
 //                  "euclidean" -   euclidean distance (default)
 //                  "manhattan" -   manhattan distance
@@ -158,7 +158,7 @@ function radius(T, s, fullmesh = true, metricType = "euclidean")
 //      fullmesh    -   whether the topo is treated as full mesh or not
 //      metricType  -   parameter for metric()
 // RETURN:
-//      MST represented by a set of Points
+//      MST represented by a set of MyPoint
 function PrimsMST(vertices, startVertex, fullmesh = true, metricType = "euclidean")
 {
     return getTree(vertices, startVertex, 0, fullmesh, metricType);
@@ -173,7 +173,7 @@ function PrimsMST(vertices, startVertex, fullmesh = true, metricType = "euclidea
 //      fullmesh    -   whether the topo is treated as full mesh or not
 //      metricType  -   parameter for metric()
 // RETURN:
-//      SPT represented by a set of Points
+//      SPT represented by a set of MyPoint
 function SPT(vertices, startVertex, fullmesh = true, metricType = "euclidean")
 {
     return getTree(vertices, startVertex, 1, fullmesh, metricType);
@@ -191,7 +191,7 @@ function SPT(vertices, startVertex, fullmesh = true, metricType = "euclidean")
 //      fullmesh    -   whether the topo is treated as full mesh or not
 //      metricType  -   parameter for metric()
 // RETURN:
-//      SPT represented by a set of Points
+//      SPT represented by a set of MyPoint
 function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclidean")
 {
     var S = new Set();              // the graph to be returned
@@ -241,8 +241,7 @@ function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclid
             {
                 // update v's path:
                 v.path.parent = minVertex;
-                v.path.length = distance;
-
+                v.path.length =  distance;
 //                 console.log("update %s's path to be %s\n", v.vector, v.path.length);
             }
         }
@@ -284,11 +283,11 @@ function test()
 {
 
     let V = new Set();
-    let a = new Point([1, 1]);
-    let b = new Point([2, 2]);
-    let c = new Point([3, 3]);
-    let d = new Point([2, 3]);
-    let e = new Point([3, 2]);
+    let a = new MyPoint([1, 1]);
+    let b = new MyPoint([2, 2]);
+    let c = new MyPoint([3, 3]);
+    let d = new MyPoint([2, 3]);
+    let e = new MyPoint([3, 2]);
 
     V.add(a);
     V.add(b);

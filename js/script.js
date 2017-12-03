@@ -5,16 +5,8 @@ window.onload = function() {
 	var canvas = document.getElementById('inputCanvas');
 	var mstCanvas = document.getElementById('mstCanvas');
 	var sptCanvas = document.getElementById('sptCanvas');
-
-	//TODO: move this to css file
-    mstCanvas.width = 500;
-    mstCanvas.height = 500;
-
-	sptCanvas.width = 500;
-	sptCanvas.height = 500;
-
-	canvas.width = 500;
-	canvas.height = 500;
+	var freeCanvas = document.getElementById('freeCanvas');
+	var slider = document.getElementById("myRange");
 
 	paper.setup(canvas);
 
@@ -26,7 +18,7 @@ window.onload = function() {
 
 	tool.onMouseDown = function(event) {
 		console.log(event.point.x);
-		var temp = new Point();
+		var temp = new MyPoint([event.point.x, event.point.y]);
 		console.log(temp);
 		if(V.size == 0) source = temp;
 		V.add(temp);
@@ -35,5 +27,10 @@ window.onload = function() {
 
 		plot_mst(V, source, mstCanvas);
 		plot_spt(V, source, sptCanvas);
+		plot_freetree(V, source, slider.value/100.0, freeCanvas);
+	}
+
+	slider.oninput = function() {
+		plot_freetree(V, source, slider.value/100.0, freeCanvas);
 	}
 }

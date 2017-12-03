@@ -7,12 +7,18 @@
     <script type="text/javascript" src="js/MST_SPT.js"></script>
     <script type="text/javascript" src="js/plot_utils.js"></script>
     <script type="text/javascript" src = "js/script.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
 
 <body>
     <canvas id="inputCanvas" resize></canvas>
     <canvas id="mstCanvas"></canvas>
     <canvas id="sptCanvas"></canvas>
+    <div id="slidecontainer">
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+    </div>
+    <canvas id="freeCanvas"></canvas>
 </body>
 
 </html>

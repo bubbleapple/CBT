@@ -95,6 +95,10 @@ function plot_spt(set, source, canvas) {
     plot_wrapper(SPT(set, source), canvas, plot_tree);
 }
 
+function plot_freetree(set, source, value, canvas) {
+    plot_wrapper(getTree(set, source, value), canvas, plot_tree);
+}
+
 // FUNCTION: plot_points_in(set, canvas)
 //      plot all the points from the set
 // PARAMETERS:
