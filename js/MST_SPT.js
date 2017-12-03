@@ -13,7 +13,6 @@ function Point(vector = [])
         }
         return res;
     }
-
  }
 
 // FUNCTION: copyGraph(G1)
@@ -107,7 +106,7 @@ function metric(u, v, type = "euclidean")
 }
 
 
-// FUNCTION: radius(T, s, metricType = "euclidean", fullmesh = true) 
+// FUNCTION: radius(T, s, metricType = "euclidean", fullmesh = true)
 //      calculate the radius of an SPT T
 // PARAMETERS:
 //      T           -   SPT to be calculated
@@ -197,7 +196,7 @@ function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclid
 {
     var S = new Set();              // the graph to be returned
     var T = copyGraph(vertices);      // a copy of parameter vertices
-    
+
     // mark the starting vertex
     for(let p of T)
     {
@@ -232,7 +231,7 @@ function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclid
             neighbors = T;
         else
             neighbors = minVertex.neighbors.filter( v => T.has(v));
-        
+
         // update neighbor's distance
         let distance = Infinity;
         for(let v of neighbors)
@@ -274,7 +273,7 @@ function printGraph(V)
 {
     for(let v of V)
     {
-        console.log("%s", v);
+        console.log(v.toString());
     }
 }
 
