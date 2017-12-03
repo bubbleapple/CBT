@@ -10,6 +10,7 @@ window.onload = function() {
 
 	paper.setup(canvas);
 
+// 	paper.setup(MSTCanvas);
 	var tool = new Tool();
 	// Define a mousedown and mousedrag handler
 
@@ -17,7 +18,6 @@ window.onload = function() {
 	var source;
 
 	tool.onMouseDown = function(event) {
-		console.log(event.point.x);
 		var temp = new MyPoint([event.point.x, event.point.y]);
 		console.log(temp);
 		if(V.size == 0) source = temp;

@@ -39,7 +39,7 @@ function plot_tree(set) {
 // FUNCTION: plot_points(set)
 //      plot all the points in the set on the current canvas.
 // PARAMETERS:
-//      set: a Set instance of MST_SPT.Point
+//      set: a Set instance of MST_SPT.MyPoint
 // RETURN:
 //      void
 //
@@ -52,7 +52,7 @@ function plot_points(set) {
 // FUNCTION: plot_wrapper(set, canvasId)
 //      set the plot canvas and draw the plot.
 // PARAMETERS:
-//      set: set of points(MST_SPT.Point)
+//      set: set of points(MST_SPT.MyPoint)
 //      canvas: canvas object from dom.
 //      func: the function determining how to plot the set
 //          choose from: plot_tree, plot_points
