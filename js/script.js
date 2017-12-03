@@ -31,6 +31,7 @@ window.onload = function() {
 	}
 
 	slider.oninput = function() {
+        // console.log(slider.value);
 		plot_freetree(V, source, slider.value/100.0, freeCanvas);
 	}
 }

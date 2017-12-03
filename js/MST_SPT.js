@@ -198,6 +198,7 @@ function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclid
     var T = copyGraph(vertices);      // a copy of parameter vertices
 
     // mark the starting vertex
+//     console.log("--------getTree is launched-----------");
     for(let p of T)
     {
         if(arrayEqual(startVertex.vector, p.vector))
@@ -224,6 +225,8 @@ function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclid
         {
             minVertex.Tneighbors.push(minVertex.path.parent);
             minVertex.path.parent.Tneighbors.push(minVertex);
+            minVertex.path.length = minVertex.path.parent.path.length + 
+                                    metric(minVertex, minVertex.path.parent, metricType);
         }
 
         // figure out the neighbor set
@@ -241,11 +244,11 @@ function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclid
             {
                 // update v's path:
                 v.path.parent = minVertex;
-                v.path.length =  distance;
+                v.path.length = distance;
+//                 console.log("Update " + v +"'s path to be " + v.path.length);
 //                 console.log("update %s's path to be %s\n", v.vector, v.path.length);
             }
         }
-        delete minVertex.path;
         S.add(minVertex);
 //         console.log("added %s into the solution set.\n", minVertex.vector);
     }
@@ -254,14 +257,11 @@ function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclid
     {
         v.neighbors =v.Tneighbors;
         delete v.Tneighbors;
+        delete v.path;
     }
-
+//     console.log("--------getTree() ENDS-------------");
     return S;
 }
-
-
-
-
 
 
 
