@@ -35,7 +35,7 @@ window.onload = function() {
 		plot_mst(V, source, mstCanvas);
 		plot_spt(V, source, sptCanvas);
 		plot_freetree(V, source, sliderSPT.value/100.0, freeCanvas);
-		plot_brbc(V, source, sliderBRBC.value/100.0, brbcCanvas)
+		plot_brbc(V, source, sliderBRBC.value/5.0, brbcCanvas)
 	}
 
 	sliderSPT.oninput = function() {
@@ -44,7 +44,7 @@ window.onload = function() {
 	}
 
 	sliderBRBC.oninput = function () {
-		console.log(sliderBRBC.value/100);
-		plot_brbc(V, source, sliderBRBC.value/100.0, brbcCanvas)
+		console.log(sliderBRBC.value/5);
+		plot_brbc(V, source, sliderBRBC.value/5.0, brbcCanvas)
 	}
 }

@@ -263,6 +263,7 @@ function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclid
     return S;
 }
 
+//TODO: annotation
 function BRBCTree(vertices, startVertex, e, fullmesh = true, metricType = "euclidean") {
     function findSource(S, start) {
         for(let s of S){
@@ -270,13 +271,12 @@ function BRBCTree(vertices, startVertex, e, fullmesh = true, metricType = "eucli
                 return s;
         }
     }
+    var temp_SPT = SPT(vertices, startVertex, fullmesh, metricType);
+    var R = radius(temp_SPT, findSource(temp_SPT, startVertex), false, metricType);
+
     var S = PrimsMST(vertices, startVertex, fullmesh, metricType);
     var source = findSource(S, startVertex);
-    var R = radius(S, source, false, metricType);
-
-
     var length = 0;
-    var source = findSource(S, startVertex);
 
     let m = new Map();
     let v;
