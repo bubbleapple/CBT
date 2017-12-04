@@ -1,25 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<head>
-    <!-- Load the Paper.js library -->
+    <title>MST SPT && BRBC</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+
     <script type="text/javascript" src="js/paper-full.min.js"></script>
     <script type="text/javascript" src="js/MST_SPT.js"></script>
     <script type="text/javascript" src="js/plot_utils.js"></script>
     <script type="text/javascript" src = "js/script.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="./css/main.css">
-</head>
+    <!-- Custom styles for this template -->
+    <link href="./css/main.css" rel="stylesheet" type="text/css">
+  </head>
 
-<body>
-    <h1 style="text-align:center;">MST SPT and RBRC Representation</h1>
-    <canvas id="inputCanvas" resize ></canvas>
-    <canvas id="mstCanvas" resize></canvas>
-    <canvas id="sptCanvas" resize></canvas>
-    <div id="slidecontainer">
-        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-    </div>
-    <canvas id="freeCanvas" resize></canvas>
-</body>
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+    
+    <h1 >MST SPT and BRBC Tree Representation</h1>
+    <div class="container marketing">
+        <div class="col-lg-3">
+            <canvas id="mstCanvas" class="canvas" resize ></canvas>
+            <h2> MST </h2>
+        </div><!-- /.col-lg-3 -->
+        <div class="col-lg-3">
+            <canvas id="sptCanvas" class="canvas" resize ></canvas>
+            <h2 > SPT </h2>
+        </div><!-- /.col-lg-3 -->
 
+        <div class="col-lg-3">
+            <canvas id="freeCanvas" class="canvas" resize ></canvas>
+            <input type="range" min="1" max="100" value="50" class="SPTSlider"
+            id="mySPTRange">
+            <h2> SPT with e </h2>
+        </div><!-- /.col-lg-3 -->
+        <div class="col-lg-3">
+            <canvas id="BRBCCanvas" class="canvas" resize ></canvas>
+            <input type="range" min="1" max="100" value="50" class="BRBCSlider"
+            id="myBRBCRange">
+            <h2> BRBC Tree </h2>
+        </div><!-- /.col-lg-3 -->
+
+
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; 2016 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+      </footer>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="js/bootstrap.min.js"></script>
+
+  </body>
 </html>
