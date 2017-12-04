@@ -110,3 +110,9 @@ function plot_freetree(set, source, value, canvas) {
 function plot_points_in(set, canvas) {
     plot_wrapper(set, canvas, plot_points);
 }
+
+
+// TODO: annotation
+function plot_brbc(set, source, value, canvas) {
+    plot_wrapper(BRBCTree(set, source, value), canvas, plot_tree);
+}

@@ -135,11 +135,11 @@ function radius(T, s, fullmesh = true, metricType = "euclidean")
         {
             if(p.visited === undefined)
             {
-//                 console.log("Visiting %s ||| path is %d", p, pathLength);
                 p.visited = true;
                 radius = Math.max(radius, pathLength);
-                for (let c of p.neighbors)
+                for (let c of p.neighbors){
                     DFS(c, pathLength + metric(p, c, metricType));
+                }
                 delete p.visited;
             }
         }
@@ -225,7 +225,7 @@ function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclid
         {
             minVertex.Tneighbors.push(minVertex.path.parent);
             minVertex.path.parent.Tneighbors.push(minVertex);
-            minVertex.path.length = minVertex.path.parent.path.length + 
+            minVertex.path.length = minVertex.path.parent.path.length +
                                     metric(minVertex, minVertex.path.parent, metricType);
         }
 
@@ -263,7 +263,75 @@ function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclid
     return S;
 }
 
+function BRBCTree(vertices, startVertex, e, fullmesh = true, metricType = "euclidean") {
+    function findSource(S, start) {
+        for(let s of S){
+            if(arrayEqual(s.vector, start.vector))
+                return s;
+        }
+    }
+    var S = PrimsMST(vertices, startVertex, fullmesh, metricType);
+    var source = findSource(S, startVertex);
+    var R = radius(S, source, false, metricType);
 
+
+    var length = 0;
+    var source = findSource(S, startVertex);
+
+    let m = new Map();
+    let v;
+    let Scopy = new Set();
+    for (let u of S)
+    {
+        v = new MyPoint();
+        for (let x of u.vector)
+            v.vector.push(x);
+        m.set(u, v);
+    }
+    for (let u of S)
+    {
+        v = m.get(u);
+        for (let x of u.neighbors)
+            v.neighbors.push(m.get(x));
+        Scopy.add(v);
+    }
+
+    function DFS(p, father) {
+        //forward
+        if(p.neighbors != undefined && p.visited === undefined) {
+            p.visited = true;
+            for (let c of p.neighbors){
+                length += metric(p, c, metricType);
+                if(length>=e*R) {
+                    length = 0;
+                    if(p!= source) {
+                        if(!m.get(p).neighbors.includes(m.get(source)))
+                            m.get(p).neighbors.push(m.get(source));
+                        if(! m.get(source).neighbors.includes(m.get(p)))
+                            m.get(source).neighbors.push(m.get(p));
+                    }
+                }
+                DFS(c, p);
+            }
+        }
+
+        //backward
+        if(p == source) return;
+        length += metric(p, father, metricType);
+        if(length>=e*R) {
+            length = 0;
+            if(p!= source) {
+                if(!m.get(p).neighbors.includes(m.get(source)))
+                    m.get(p).neighbors.push(m.get(source));
+                if(! m.get(source).neighbors.includes(m.get(p)))
+                    m.get(source).neighbors.push(m.get(p));
+            }
+        }
+    }
+    DFS(source, source);
+    var Result = SPT(Scopy, m.get(source), false, metricType);
+    return Result;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // below are merely testing codes:
@@ -291,46 +359,47 @@ function test()
 
     V.add(a);
     V.add(b);
-    // V.add(c);
+    V.add(c);
     V.add(d);
     V.add(e);
 
 
-    a.neighbors = [d, e];
-    b.neighbors = [e, d];
+    // a.neighbors = [d, e];
+    // b.neighbors = [e, d];
     // c.neighbors = [b, e, d];
-    d.neighbors = [a, b];
-    e.neighbors = [a, b];
+    // d.neighbors = [a, b];
+    // e.neighbors = [a, b];
 
     // kaka = SPT(V, b);
     //
-    console.log("\n\nGraph V is :");
-    printGraph(V);
-    console.log("\nPrim's MST, full mesh:");
-    printGraph(PrimsMST(V, a));
+    // console.log("\n\nGraph V is :");
+    // printGraph(V);
+    // console.log("\nPrim's MST, full mesh:");
 
-
-    console.log("\n\nGraph V is :");
-    printGraph(V);
-    console.log("\nSPT, full mesh:");
-    printGraph(SPT(V, a));
-
-
-    // test for radius:
-    console.log("\n\nGraph V is :");
-    printGraph(V);
-    console.log("radius of the original graph is %d", radius(SPT(V, a, true, 'manhattan'), a, true, "manhattan"));
-
-
-    console.log("\n\nGraph V is :");
-    printGraph(V);
-    console.log("\nPrim's MST, NOT fullmesh:");
-    printGraph(PrimsMST(V, a, false, "manhattan"));
-
-    console.log("\n\nGraph V is :");
-    printGraph(V);
-    console.log("\nSPT, NOT fullmesh:");
-    printGraph(SPT(V, a, false , "manhattan"));
+    printGraph(BRBCTree(V, a, 1))
+    //
+    //
+    // console.log("\n\nGraph V is :");
+    // printGraph(V);
+    // console.log("\nSPT, full mesh:");
+    // printGraph(SPT(V, a));
+    //
+    //
+    // // test for radius:
+    // console.log("\n\nGraph V is :");
+    // printGraph(V);
+    // console.log("radius of the original graph is %d", radius(SPT(V, a, true, 'manhattan'), a, true, "manhattan"));
+    //
+    //
+    // console.log("\n\nGraph V is :");
+    // printGraph(V);
+    // console.log("\nPrim's MST, NOT fullmesh:");
+    // printGraph(PrimsMST(V, a, false, "manhattan"));
+    //
+    // console.log("\n\nGraph V is :");
+    // printGraph(V);
+    // console.log("\nSPT, NOT fullmesh:");
+    // printGraph(SPT(V, a, false , "manhattan"));
 
 
 }
