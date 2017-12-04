@@ -14,6 +14,8 @@ window.onload = function() {
 	paper.setup(sptCanvas);
     paper.setup(freeCanvas);
 	paper.setup(brbcCanvas);
+    document.getElementById('freeCanvasE').innerHTML = "e = " + sliderSPT.value/100.0;
+document.getElementById('BRBCCanvasE').innerHTML = "e = " + sliderBRBC.value;
 
 
 // 	paper.setup(MSTCanvas);
@@ -39,12 +41,14 @@ window.onload = function() {
 	}
 
 	sliderSPT.oninput = function() {
-        // console.log(slider.value);
-		plot_freetree(V, source, sliderSPT.value/100.0, freeCanvas);
+		let e = sliderSPT.value/100.0;
+        plot_freetree(V, source, e, freeCanvas);
+        document.getElementById('freeCanvasE').innerHTML = "e = " + e;
 	}
 
 	sliderBRBC.oninput = function () {
-		console.log(sliderBRBC.value/5);
-		plot_brbc(V, source, sliderBRBC.value/5.0, brbcCanvas)
+		let e = sliderBRBC.value;
+		plot_brbc(V, source, e, brbcCanvas);
+        document.getElementById('BRBCCanvasE').innerHTML = "e = " + e;
 	}
 }
