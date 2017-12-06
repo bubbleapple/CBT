@@ -33,6 +33,22 @@ h1 {
     height: 100px;
 }
 
+.paragraph  {
+    font-size: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    font-size: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+
+}
+
 canvas{
     margin-right : 10px;
     margin-left: 10px;

@@ -72,7 +72,73 @@
                 <p>Radius:  <span id="BRBCRadius">0</span>   </p>
                 <p>Cost:  <span id="BRBCCost">0</span>  </p>
             </div><!-- /.col-lg-3 -->
-    </div><!-- /.container -->
+
+        </div><!-- /.container -->
+
+        <div class="container paragraph">
+            <h1> Theory Background </h1>
+            <h2> 1. Key Abbreviations and definitions </h2>
+            <p> MST     -   Minimum Spanning Tree       <br></p>   
+            <p> SPT     -   Shortest Path Tree          <br></p>       
+            <p> BRBC    -   Bounded Radius Bounded Cost <br></p>
+            <p> Radius  -   The longest path from source vertex to other points
+                                                        <br></p>
+            <p> Cost    -   Sum of all the weights of all the edges.
+                            In this illustration the cost is evaluated using
+                            euclidean distance. <br> </p>
+            <p>
+            <h2> 2. Explanations </h2>
+            <h3> 2.1 MST and SPT </h3>
+            <p> This webpage is to illustrate the MST and SPT generated from
+            the same set of points, as well as two other trees(SPT with e and
+            BRBC Tree) generated used these two algorithm as well but with more 
+            variables introduced to balance the cost and radius.</p>
+            <h3> 2.2 Shortest Path with e</h3>
+            <p> In MST generating process, we used Prim's algorithm, which
+            will add a point v to the existing tree T with the edge(u, v) of lowest
+            cost where u is in the tree T already. In the SPT generating
+            process, the path from source to u is taken into consideration.
+            So the total weight is  path of s to u + edge(u, v). </p>
+            
+            <p> Based on the basic algorithm above, we can now introduce a
+            coefficient \( \epsilon \) for path length through which we can control the
+            weight of the path</p>
+            $$ Weight = \epsilon \cdot |path| + |edge|$$
+            <h3> 2.3 BRBC Tree </h3>
+            <p> The algorithm is like below:</p>
+            <pre>
+Radius of the original point set: R
+coefficient: e
+source: S
+generate a MST T based on the points given. 
+path = 0
+Traverse T:
+    path += current edge
+    if path > = eR:
+        add a new edge between S and current vertex visited into T
+run SPT on T and return the result T'
+            </pre>
+            <p>
+            The radius r of T' is bounded by \(1 + \epsilon R\):
+            $$ r \le R + \epsilon R = (1 + \epsilon) R $$
+            </p>
+            <p>
+            The cost of T' is bounded by \( (1 + \frac{2}{\epsilon})MST \):
+            $$
+            Cost_{T'} \lt Cost _{T} = Cost_{MST} + R \cdot
+            \frac{2Cost_{MST}}{\epsilon \cdot R} = (1 +
+            \frac{2}{\epsilon})Cost_{MST}
+            $$
+            </p>
+        </p>
+
+        </div>
+
+
+
+
+
+
       <!-- FOOTER -->
       <footer>
         <p class="pull-right"><a href="#">Back to top</a></p>
@@ -83,6 +149,9 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" async
+          src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+      </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
     <script src="js/bootstrap.min.js"></script>
