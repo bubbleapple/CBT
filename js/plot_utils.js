@@ -7,11 +7,11 @@
 // RETURN:
 //      void
 //
-function plot_point(pnt) {
+function plot_point(pnt, color = 'black') {
     var myCircle =
         new paper.Path.Circle(new paper.Point(pnt.vector[0],pnt.vector[1]), 5);
-    myCircle.strokeColor = 'black';
-    myCircle.fillColor = 'black';
+    myCircle.strokeColor = color;
+    myCircle.fillColor = color;
 }
 
 // FUNCTION: plot_tree(set)
@@ -78,8 +78,26 @@ function plot_wrapper(set, canvas, func) {
 //      void
 //
 function plot_mst(set, source, canvas) {
-    console.log(set);
-    plot_wrapper(PrimsMST(set, source), canvas, plot_tree);
+    paper.setup(canvas);
+    let vertices = PrimsMST(set, source);
+
+    for(let pnt of vertices){
+        // plot the point
+        if(arrayEqual(pnt.vector, source.vector))
+            plot_point(pnt, 'red');
+        else
+            plot_point(pnt, 'black');
+
+        // plot the edge
+        for(let pnt1 of pnt.neighbors) {
+            var path = new paper.Path();
+            path.strokeColor = 'black';
+            path.add(new paper.Point(pnt.vector[0],pnt.vector[1]));
+            path.add(new paper.Point(pnt1.vector[0],pnt1.vector[1]));
+        }
+    }
+
+    paper.view.draw();
 }
 
 // FUNCTION: plot_spt(set, source, canvasId)
