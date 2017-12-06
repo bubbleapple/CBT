@@ -32,16 +32,10 @@
         <div class="col-lg-3">
             <h2> MST </h2>
             <canvas id="mstCanvas" class="canvas" resize ></canvas>
-            <br><br><br><br><br>
-            <p id="mstRadius">Radius:     </p>
-            <p id="mstCost">Cost:    </p>
         </div><!-- /.col-lg-3 -->
         <div class="col-lg-3">
             <h2 > SPT </h2>
             <canvas id="sptCanvas" class="canvas" resize ></canvas>
-            <br><br><br><br><br>
-            <p id="sptRadius">Radius:     </p>
-            <p id="sptCost">Cost:    </p>
         </div><!-- /.col-lg-3 -->
 
         <div class="col-lg-3">
@@ -50,8 +44,6 @@
             <input type="range" min="0" max="100" value="50" class="SPTSlider"
             id="mySPTRange">
             <p id="freeCanvasE">e: </p>
-            <p id="freeRadius">Radius:     </p>
-            <p id="freeCost">Cost:    </p>
         </div><!-- /.col-lg-3 -->
         <div class="col-lg-3">
             <h2> BRBC Tree </h2>
@@ -59,19 +51,33 @@
             <input type="range" min="0" max="100" value="50" class="BRBCSlider"
             id="myBRBCRange">
             <p id="BRBCCanvasE">e: </p>
-            <p id="BRBCRadius">Radius:     </p>
-            <p id="BRBCCost">Cost:    </p>
 
         </div><!-- /.col-lg-3 -->
 
+        <div class="container RC">
+            <div class="col-lg-3">
+                <p>Radius: <span id="mstRadius">0</span>    </p>
+                <p>Cost: <span id="mstCost">0</span>   </p>
+            </div><!-- /.col-lg-3 -->
+            <div class="col-lg-3">
+                <p>Radius:  <span id="sptRadius">0</span>   </p>
+                <p>Cost:  <span id="sptCost">0</span>   </p>
+            </div><!-- /.col-lg-3 -->
 
+            <div class="col-lg-3">
+                <p>Radius: <span id="freeRadius">0</span>    </p>
+                <p>Cost:  <span id="freeCost">0</span>   </p>
+            </div><!-- /.col-lg-3 -->
+            <div class="col-lg-3">
+                <p>Radius:  <span id="BRBCRadius">0</span>   </p>
+                <p>Cost:  <span id="BRBCCost">0</span>  </p>
+            </div><!-- /.col-lg-3 -->
+    </div><!-- /.container -->
       <!-- FOOTER -->
       <footer>
         <p class="pull-right"><a href="#">Back to top</a></p>
         <p>&copy; 2016 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
       </footer>
-
-    </div><!-- /.container -->
 
 
     <!-- Bootstrap core JavaScript

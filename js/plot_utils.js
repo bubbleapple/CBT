@@ -25,7 +25,7 @@ function plot_point(pnt, color = 'black') {
 //     for(let pnt of set) {
 //         // plot the point
 //         plot_point(pnt);
-// 
+//
 //         // plot the edge
 //         for(let pnt1 of pnt.neighbors) {
 //             var path = new paper.Path();
@@ -86,10 +86,12 @@ function plot_wrapper(vertices, canvas, source) {
 //      source: assigned source for the mst Tree
 //      canvas: canvas object from dom.
 // RETURN:
-//      void
+//      mst: set of MST_SPT.MyPoint, structure of MST
 //
 function plot_mst(set, source, canvas) {
+    var mst = PrimsMST(set, source);
     plot_wrapper(PrimsMST(set, source), canvas, source);
+    return mst;
  }
 
 // FUNCTION: plot_spt(set, source, canvasId)
@@ -99,18 +101,23 @@ function plot_mst(set, source, canvas) {
 //      source: assigned source for the mst Tree
 //      canvas: canvas object from dom.
 // RETURN:
-//      void
+//      spt: set of MST_SPT.MyPoint, structure of SPT
 //
 function plot_spt(set, source, canvas) {
-    plot_wrapper(SPT(set, source), canvas, source);
+    var spt = SPT(set, source)
+    plot_wrapper(spt, canvas, source);
+    return spt;
 }
 
 function plot_freetree(set, source, value, canvas) {
-    plot_wrapper(getTree(set, source, value), canvas, source);
+    var tree = getTree(set, source, value);
+    plot_wrapper(tree, canvas, source);
+    return tree;
 }
-
 
 // TODO: annotation
 function plot_brbc(set, source, value, canvas) {
+    var tree = BRBCTree(set, source, value);
     plot_wrapper(BRBCTree(set, source, value), canvas, source);
+    return tree;
 }

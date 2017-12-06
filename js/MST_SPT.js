@@ -145,7 +145,27 @@ function radius(T, s, fullmesh = true, metricType = "euclidean")
         }
         DFS(s, 0);
     }
+    //console.log(radius)
     return radius;
+}
+
+function graphCost(T, fullmesh = false, metricType = "euclidean") {
+    var cost = 0;
+    if(fullmesh) {
+        for (let v of T) {
+            for (let other of T) {
+                if(v != other) cost += metric(v, other, metricType);
+            }
+        }
+    }
+    else {
+        for(let v of T) {
+            for( let neighbor of v.neighbors) {
+                cost += metric(v, neighbor, metricType);
+            }
+        }
+    }
+    return cost/2.0;
 }
 
 
@@ -263,14 +283,15 @@ function getTree(vertices, startVertex, e, fullmesh = true, metricType = "euclid
     return S;
 }
 
+function findSource(S, start) {
+    for(let s of S){
+        if(arrayEqual(s.vector, start.vector))
+            return s;
+    }
+}
+
 //TODO: annotation
 function BRBCTree(vertices, startVertex, e, fullmesh = true, metricType = "euclidean") {
-    function findSource(S, start) {
-        for(let s of S){
-            if(arrayEqual(s.vector, start.vector))
-                return s;
-        }
-    }
     var temp_SPT = SPT(vertices, startVertex, fullmesh, metricType);
     var R = radius(temp_SPT, findSource(temp_SPT, startVertex), false, metricType);
 
@@ -363,6 +384,7 @@ function test()
     V.add(d);
     V.add(e);
 
+    console.log(graphCost(V, true));
 
     // a.neighbors = [d, e];
     // b.neighbors = [e, d];
@@ -376,7 +398,7 @@ function test()
     // printGraph(V);
     // console.log("\nPrim's MST, full mesh:");
 
-    printGraph(BRBCTree(V, a, 1))
+    //printGraph(BRBCTree(V, a, 1))
     //
     //
     // console.log("\n\nGraph V is :");
@@ -405,4 +427,4 @@ function test()
 }
 
 
-// test();
+//test();
